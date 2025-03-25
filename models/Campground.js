@@ -14,6 +14,9 @@ const CampgroundSchema = new mongoose.Schema({
     },
     tel : {
         type : String
+    },
+    picture : {
+        type : String
     }
 },{
     toJSON : {virtuals:true},
