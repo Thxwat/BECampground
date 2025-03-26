@@ -1,6 +1,6 @@
 {
     "version": 2,
-    "name": "CBS TEAM KAE LEAW",
+    "name": "campground booking",
     "builds": [
         {
             "src": "server.js",
