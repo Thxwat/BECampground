@@ -1,0 +1,98 @@
+@startuml Campground Booking System (CBS)
+
+package "Campground Booking System (CBS)"{
+    class "<<Application>>\nCBSService" as CBSService{}
+
+    class "<<Resource>>\nCampgrounds" as ResourceCampgrounds{
+        <<GET>> +getCampgrounds():Campground
+        <<POST>> +createCampground():Campground
+    }
+
+    class "<<Resource>>\nCampground" as ResourceCampground {
+        <<GET>> +getCampground(): Campground
+        <<PUT>> +updateCampground(): Campground
+        <<DELETE>> +deleteCampground(): void
+    }
+
+    class "<<Representation>>\nCampground" as RepresentationCampground {
+        -name
+        -cooradinate
+        -province
+        -postalcode
+        -telephone
+        -region
+    }
+
+    class "<<Resource>>\nAuth" as ResourceAuth{
+        
+    }
+
+    class "<<Resource>>\nRegister" as RegisterService {
+        <<POST>> +register(): User
+    }
+
+    class "<<Resource>>\nLogin" as LoginService {
+        <<POST>> +login(): User
+    }
+
+    class "<<Resource>>\nGet Me" as GetMeService {
+        <<GET>> +getMe(): User
+    }
+    class "<<Resource>>\nLogout" as LogoutService {
+        <<GET>> +logout(): User
+    }
+
+    class "<<Representation>>\nUser" as RepresentationUser {
+        -name
+        -telephone
+        -email
+        -password
+        -role
+    }
+
+    class "<<Resource>>\nAppointments" as ResourceAppointments{
+        <<GET>> +getAppointments(): Appointment
+    }
+
+    class "<<Resource>>\nAppointments" as AddResourceAppointments{
+        <<POST>> +addAppointment(): Appointment
+    }
+
+    class "<<Resource>>\nAppointment" as ResourceAppointment{
+        <<GET>> +getAppointment(): Appointment
+        <<PUT>> +updateAppointment(): Appointment
+        <<DELETE>> +deleteAppointment(): void
+    }
+
+    class "<<Representation>>\nAppointment" as RepresentationAppointment {
+        -apptDate
+        -user
+        -campground
+        -createdAt
+    }
+}
+
+CBSService ..> ResourceCampgrounds:"/campgrounds\n<<Path>>"
+ResourceCampgrounds ..> ResourceCampground: "/{campgroundId}\n<<Path>>"
+ResourceCampgrounds ..> RepresentationCampground: "<<Use>>"
+ResourceCampground ..> AddResourceAppointments: "/appointment\n<<Path>>"
+ResourceCampground ..> RepresentationCampground: "<<Use>>"
+
+CBSService ..> ResourceAppointments: "/appointment\n<<Path>>"
+ResourceAppointments ..> ResourceAppointment: "/{appointmentId}\n<<Path>>"
+ResourceAppointment ..> RepresentationAppointment: "<<Use>>"
+ResourceAppointments ..> RepresentationAppointment: "<<Use>>"
+AddResourceAppointments ..> RepresentationAppointment: "<<Use>>"
+
+CBSService ..> ResourceAuth:"/auth\n<<Path>>"
+ResourceAuth ..> RegisterService: "/register\n<<Path>>"
+ResourceAuth ..> LoginService: "/login\n<<Path>>"
+ResourceAuth ..> GetMeService: "/me\n<<Path>>"
+ResourceAuth ..> LogoutService: "/logout\n<<Path>>"
+RegisterService ..> RepresentationUser: "<<Use>>"
+LoginService ..> RepresentationUser: "<<Use>>"
+GetMeService ..> RepresentationUser: "<<Use>>"
+LogoutService ..> RepresentationUser: "<<Use>>"
+
+
+@enduml

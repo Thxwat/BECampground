@@ -1,0 +1,26 @@
+@startuml Manage Campground (GET ONE)
+
+header Campground Sequence Diagram
+footer Page %page% of %lastpage%
+title "Manage Campground (GET ONE)"
+
+actor "User" as user
+actor "Admin" as admin
+participant "<<javaScript>>\n:server" as server
+participant "<<router>>\n:campgrounds" as routerCampgrounds
+participant "<<controllers>>\n:campgrounds" as controllersCampgrounds
+participant "<<model>>\n:Campground" as modelCampground
+database "<<MongoDB>>\n:campgrounds" as CampgroundsDatabase
+
+user->server ++:req.get('/campgrounds/;id')
+admin->server ++:req.get('/campgrounds/:id')
+server->routerCampgrounds ++:app.use('/campgrounds',campgrounds)
+routerCampgrounds -> controllersCampgrounds ++:getCampground()
+controllersCampgrounds->modelCampground ++:findById(req.params.id)
+modelCampground ->CampgroundsDatabase ++:CampgroundSchema
+CampgroundsDatabase --> modelCampground --:campground
+controllersCampgrounds <-- modelCampground --:campground
+controllersCampgrounds->admin --:response
+controllersCampgrounds->user --:response
+
+@enduml

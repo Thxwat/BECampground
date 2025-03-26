@@ -1,0 +1,27 @@
+@startuml CBS Usecase Diagram (Auth)
+left to right direction
+
+' skinparam linetype ortho
+
+actor "User" as user
+rectangle "CBS Campground system" as CampgroundSystem {
+    usecase "Get all campground" as getAll
+    usecase "Get a campground by id" as getOne
+    usecase "Create a new campground" as newCG
+    usecase "Update a campground by id" as upgradeCG
+    usecase "Delete a campground by id" as delCG
+}
+
+user -- getOne
+user -- getAll
+
+actor "Admin" as admin
+
+getOne -- admin
+getAll -- admin
+newCG -- admin
+upgradeCG -- admin
+delCG -- admin
+
+
+@enduml

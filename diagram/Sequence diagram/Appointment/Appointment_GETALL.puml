@@ -1,0 +1,43 @@
+@startuml Manage Appointment (GET ALL)
+
+header Campground Sequence Diagram
+footer Page %page% of %lastpage%
+title "Manage Appointment (GET ALL)"
+
+actor "User" as user
+actor "Admin" as admin
+participant "<<javaScript>>\n:server" as server
+participant "<<router>>\n:appointments" as routerAppointments
+participant "<<middleware>>\n:auth" as middlewareAuth
+participant "<<model>>\n:User" as modelUser
+participant "<<controllers>>\n:appointments" as controllersAppointments
+participant "<<model>>\n:Appointment" as modelAppointment
+database "<<MongoDB>>\n:appointments" as CampgroundsDatabase
+database "<<MongoDB>>\n:users" as UsersDatabase
+
+user->server ++:req.get('/appointments')
+admin->server ++:req.get('/appointments')
+server->routerAppointments ++:app.use('/appointments',appointments)
+routerAppointments -> middlewareAuth ++:protect(token)
+middlewareAuth -> modelUser ++:findById(decode.id)
+modelUser -> UsersDatabase ++:findById(decode.id)
+UsersDatabase --> modelUser --:user
+modelUser --> middlewareAuth --:user
+middlewareAuth --> routerAppointments --:next()
+routerAppointments -> controllersAppointments ++:getAppointments()
+alt req.user.role !== "admin"
+    controllersAppointments->modelAppointment ++:find(req.user.id)
+else req.user.role == "admin"
+    alt req.params.campgroundId
+        controllersAppointments->modelAppointment ++:find(req.params.campgroundId)
+    else !req.params.campgroundId
+        controllersAppointments->modelAppointment ++:find()
+    end
+end
+modelAppointment ->CampgroundsDatabase ++:AppointmentSchema
+CampgroundsDatabase --> modelAppointment --:appointment
+controllersAppointments <-- modelAppointment --:appointment
+controllersAppointments->admin --:response
+controllersAppointments->user --:response
+
+@enduml

@@ -1,0 +1,41 @@
+@startuml CBS Usecase Diagram (Auth)
+left to right direction
+
+' skinparam linetype ortho
+
+actor "User" as user
+rectangle "CBS Appointment system" as CampgroundSystem {
+    usecase "Get all of user appointment" as getUAll
+    usecase "Get a user's appointment" as getUOne
+    usecase "Create new user's appointment" as newUApm
+    usecase "Update user's appointment" as upgradeUApm
+    usecase "Delete user's appointment" as delUApm
+    
+    usecase "Get all appointment" as getAll
+    usecase "Get an appointment by id" as getA
+    usecase "Create a new appointment" as newCG
+    usecase "Update an appointment by id" as upgradeCG
+    usecase "Delete an appointment by id" as delCG
+}
+
+user -- getUOne
+user -- getUAll
+user -- newUApm
+user -- upgradeUApm
+user -- delUApm
+
+actor "Admin" as admin
+
+getA -- admin
+getAll -- admin
+newCG -- admin
+upgradeCG -- admin
+delCG -- admin
+
+getUAll -[hidden]-> getAll : on the same line
+getUOne -[hidden]-> getA : on the same line
+newUApm -[hidden]-> newCG : on the same line
+upgradeUApm -[hidden]-> upgradeCG : on the same line
+delUApm -[hidden]-> delCG : on the same line
+
+@enduml

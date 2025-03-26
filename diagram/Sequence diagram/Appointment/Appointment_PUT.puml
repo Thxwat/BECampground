@@ -1,0 +1,37 @@
+@startuml Manage Appointment (PUT)
+
+header Campground Sequence Diagram
+footer Page %page% of %lastpage%
+title "Manage Appointment (PUT)"
+
+actor "User" as user
+actor "Admin" as admin
+participant "<<javaScript>>\n:server" as server
+participant "<<router>>\n:appointments" as routerAppointments
+participant "<<middleware>>\n:auth" as middlewareAuth
+participant "<<model>>\n:User" as modelUser
+participant "<<controllers>>\n:appointments" as controllersAppointments
+participant "<<model>>\n:Appointment" as modelAppointment
+database "<<MongoDB>>\n:appointments" as CampgroundsDatabase
+database "<<MongoDB>>\n:users" as UsersDatabase
+
+user->server ++:req.put('/appointments/:id')
+admin->server ++:req.put('/appointments/:id')
+server->routerAppointments ++:app.use('/appointments',appointments)
+routerAppointments -> middlewareAuth ++:protect(token)
+middlewareAuth -> modelUser ++:findById(decode.id)
+modelUser -> UsersDatabase ++:findById(decode.id)
+UsersDatabase --> modelUser --:user
+modelUser --> middlewareAuth --:user
+middlewareAuth --> routerAppointments --:next()
+routerAppointments -> middlewareAuth ++:authorize("admin", "user")
+middlewareAuth --> routerAppointments --:next()
+routerAppointments -> controllersAppointments ++:updateAppointment()
+controllersAppointments->modelAppointment ++:findByIdAndUpdate(req.params.id,req.body)
+modelAppointment ->CampgroundsDatabase ++:AppointmentSchema
+CampgroundsDatabase --> modelAppointment --:appointment
+controllersAppointments <-- modelAppointment --:appointment
+controllersAppointments->admin --:response
+controllersAppointments->user --:response
+
+@enduml

@@ -1,0 +1,27 @@
+@startuml CBS Usecase Diagram (Auth)
+left to right direction
+
+' skinparam linetype ortho
+
+actor "User" as user
+rectangle "CBS Authentication system" as CampgroundSystem {
+    usecase "Register" as reg
+    usecase "Login" as login
+    usecase "Logout" as logout
+    usecase "Get me" as getMe
+}
+
+user -- reg
+user -- login
+user -- logout
+user -- getMe
+
+actor "Admin" as admin
+
+reg -- admin
+login -- admin
+logout -- admin
+getMe -- admin
+
+
+@enduml
