@@ -15,7 +15,7 @@ const CampgroundSchema = new mongoose.Schema(
       required: [true, "Please add a region"],
     },
 
-    telephone: {
+    tel: {
       type: String,
       required: [true, "Please add a telephone number"],
     },
